@@ -4,9 +4,9 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import { createServer } from 'http';
 
-// Route imports (to be created)
-// import authRoutes from './routes/auth.js';
-// import taskRoutes from './routes/tasks.js';
+// Route imports
+import authRoutes from './routes/authRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
 
 dotenv.config();
 
@@ -16,6 +16,10 @@ const httpServer = createServer(app);
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
