@@ -7,7 +7,48 @@ import SmartAICard from '../components/SmartAICard';
 import axios from 'axios';
 
 const Dashboard = () => {
-  // ... state ...
+  const { user } = useAuth();
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [view, setView] = useState('grid');
+  const [filter, setFilter] = useState('all');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${user.token}` }
+      };
+      const { data } = await axios.get('http://localhost:5000/api/tasks', config);
+      setTasks(data);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCreateTask = async (taskData) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${user.token}` }
+      };
+      await axios.post('http://localhost:5000/api/tasks', taskData, config);
+      fetchTasks();
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const filteredTasks = tasks.filter(task => {
+    if (filter === 'completed') return task.status === 'completed';
+    if (filter === 'pending') return task.status === 'pending';
+    return true;
+  });
   
   return (
     <div className="animate-fade">
