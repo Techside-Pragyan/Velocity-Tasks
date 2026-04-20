@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Plus, Search, Filter, LayoutGrid, List as ListIcon } from 'lucide-react';
 import TaskCard from '../components/TaskCard';
+import TaskModal from '../components/TaskModal';
 import axios from 'axios';
 
 const Dashboard = () => {
@@ -10,6 +11,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState('grid');
   const [filter, setFilter] = useState('all');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchTasks();
@@ -23,6 +25,19 @@ const Dashboard = () => {
       const { data } = await axios.get('http://localhost:5000/api/tasks', config);
       setTasks(data);
       setLoading(false);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCreateTask = async (taskData) => {
+    try {
+      const config = {
+        headers: { Authorization: `Bearer ${user.token}` }
+      };
+      await axios.post('http://localhost:5000/api/tasks', taskData, config);
+      fetchTasks();
+      setIsModalOpen(false);
     } catch (err) {
       console.error(err);
     }
@@ -43,7 +58,7 @@ const Dashboard = () => {
           </h1>
           <p style={{ color: 'var(--text-muted)' }}>You have {tasks.filter(t => t.status !== 'completed').length} tasks for today.</p>
         </div>
-        <button className="btn btn-primary">
+        <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
           <Plus size={20} /> Create Task
         </button>
       </header>
@@ -89,6 +104,12 @@ const Dashboard = () => {
           </div>
         )}
       </div>
+
+      <TaskModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSave={handleCreateTask} 
+      />
     </div>
   );
 };

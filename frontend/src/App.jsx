@@ -4,11 +4,12 @@ import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Analytics from './pages/Analytics';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
-
+  
   if (loading) return (
     <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div className="loader">Loading...</div>
@@ -40,7 +41,14 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } 
       />
-      {/* Add more protected routes here */}
+      <Route 
+        path="/analytics" 
+        element={
+          <ProtectedRoute>
+            <Analytics />
+          </ProtectedRoute>
+        } 
+      />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
