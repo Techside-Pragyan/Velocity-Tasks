@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Analytics from './pages/Analytics';
+import Calendar from './pages/Calendar';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children }) => {
@@ -46,6 +47,14 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Analytics />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/calendar" 
+        element={
+          <ProtectedRoute>
+            <Calendar />
           </ProtectedRoute>
         } 
       />
